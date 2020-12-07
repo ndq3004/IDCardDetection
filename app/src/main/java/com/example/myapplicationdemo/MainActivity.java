@@ -93,6 +93,12 @@ public class MainActivity extends AppCompatActivity {
         info = (TextView) findViewById(R.id.textView);
 
         callHTTPRequest = new CallHTTPRequest(mContext);
+        try {
+            ResponseHandler.test();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
 
         btnCap.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -142,23 +148,7 @@ public class MainActivity extends AppCompatActivity {
         }else{
             Response response = callHTTPRequest.getIDCardInfo();
             Log.i("reponse get", "respnse");
-            if(response != null){
-                try {
-                    JSONObject jsonObject = new JSONObject(response.body().string());
-                    jsonObject = jsonObject.getJSONObject("predictions");
-                    jsonObject = jsonObject.getJSONObject("infomation");
-//                    for(String key : iterate(jsonObject.keys()))
-//                    {
-//                        System.out.println(key);
-//                        System.out.println(jsonObject.getString(key));
-//                    }
-                    System.out.println(jsonObject.toString());
-
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-
+            ResponseHandler.handleResponse(response, info);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

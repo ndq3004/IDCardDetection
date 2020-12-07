@@ -39,7 +39,8 @@ public class CallHTTPRequest {
 //    public String base64ImageCard;
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     OkHttpClient client;
-
+//    String localIp = "192.168.1.66";
+    String localIp = "192.168.137.68";
     public  CallHTTPRequest(Context context){
         this.context = context;
         this.imutils = new Imutils();
@@ -93,15 +94,12 @@ public class CallHTTPRequest {
                 RequestBody body = RequestBody.create(dataStringJson, JSON);
                 try {
                     Request request = new Request.Builder()
-                            .url("http://192.168.1.67:5000/postimg")
+                            .url("http://" + localIp + ":5000/postimg")
                             .post(body)
                             .build();
                     Log.i("build request", "success");
 
                     Response response = client.newCall(request).execute();
-                    if(response.isSuccessful()){
-                        System.out.println(response.body().string());
-                    }
                     return response;
                 }catch (Exception e){
                     e.printStackTrace();
