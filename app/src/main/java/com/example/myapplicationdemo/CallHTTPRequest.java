@@ -40,7 +40,7 @@ public class CallHTTPRequest {
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     OkHttpClient client;
 //    String localIp = "192.168.1.66";
-    String localIp = "192.168.137.68";
+    String localIp = "192.168.1.66";
     public  CallHTTPRequest(Context context){
         this.context = context;
         this.imutils = new Imutils();
@@ -53,7 +53,6 @@ public class CallHTTPRequest {
     public Intent getCaptureImageIntent(){
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-//        method = "POST";
         try {
             if (Build.VERSION.SDK_INT >= 23) {
                 String[] PERMISSIONS = {android.Manifest.permission.READ_EXTERNAL_STORAGE,android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -71,8 +70,6 @@ public class CallHTTPRequest {
                     BuildConfig.APPLICATION_ID + ".provider", imageFile);
             this.camFileUrl = imageFile.getAbsolutePath();
             intent.putExtra(MediaStore.EXTRA_OUTPUT, outUri);
-            Log.i("putExtra", "putExtra");
-//            startActivityForResult(intent, REQUEST_CODE);
             return intent;
         }catch (Exception e){
             e.printStackTrace();

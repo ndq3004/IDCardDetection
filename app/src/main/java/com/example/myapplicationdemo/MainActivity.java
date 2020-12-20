@@ -6,7 +6,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -61,6 +63,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class MainActivity extends AppCompatActivity {
 
     ImageView imgCap;
+    TextView titleResult;
     Button btnCap;
     Button btnGet;
     TextView info;
@@ -91,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
         btnCap = (Button) findViewById(R.id.button1);
         btnGet = (Button) findViewById(R.id.button2);
         info = (TextView) findViewById(R.id.textView);
+        titleResult = (TextView) findViewById(R.id.titleResult);
 
         callHTTPRequest = new CallHTTPRequest(mContext);
         try {
@@ -111,6 +115,24 @@ public class MainActivity extends AppCompatActivity {
         btnGet.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                new AlertDialog.Builder(mContext)
+                        .setTitle("Hướng dẫn")
+                        .setMessage("Chọn nút chụp ảnh -> Chụp ảnh chứng minh thư. \n" +
+                                "Xem kết quả trả về ở dưới! \n " +
+                                "Good luck!")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Continue with delete operation
+                            }
+                        })
+
+                        // A null listener allows the button to dismiss the dialog and take no further action.
+//                        .setNegativeButton(android.R.string.no, null)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
             }
         });
     }
@@ -133,11 +155,13 @@ public class MainActivity extends AppCompatActivity {
                 if(data != null){
                     image = data.getData();
                     imgCap.setImageURI(image);
+                    Log.i("setImageURI", "setImageURI1");
                     imgCap.setVisibility(View.VISIBLE);
                 }
                 if(image == null && mCamFileName != null){
                     image = Uri.fromFile(new File(mCamFileName));
                     imgCap.setImageURI(image);
+                    Log.i("setImageURI", "setImageURI2");
                     imgCap.setVisibility(View.VISIBLE);
                 }
             }
@@ -148,7 +172,13 @@ public class MainActivity extends AppCompatActivity {
         }else{
             Response response = callHTTPRequest.getIDCardInfo();
             Log.i("reponse get", "respnse");
-            ResponseHandler.handleResponse(response, info);
+            titleResult.setText("Kết quả trích xuất: ");
+            if(response.isSuccessful()){
+                info.setBackgroundResource(R.drawable.border);
+                ResponseHandler.handleResponse(response, info);
+            }else {
+                info.setText("Error occur!");
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
