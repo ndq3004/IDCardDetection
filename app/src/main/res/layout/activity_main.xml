@@ -44,14 +44,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:text="Capture Image" />
+            android:text="Chụp ảnh"
+            android:layout_marginRight="8dp"/>
 
         <Button
             android:id="@+id/button2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:text="Introduce" />
+            android:text="Hướng dẫn" />
 
         <Space
             android:layout_width="wrap_content"

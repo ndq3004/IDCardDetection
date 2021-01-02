@@ -107,8 +107,10 @@ public class MainActivity extends AppCompatActivity {
         btnCap.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                Log.i("btnCapOnclick", "btnCapOnclick");
                 Intent intent = callHTTPRequest.getCaptureImageIntent();
                 mCamFileName = callHTTPRequest.camFileUrl;
+                Log.i("btnCapOnclick", mCamFileName);
                 startActivityForResult(intent, callHTTPRequest.REQUEST_CODE);
             }
         });
@@ -119,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
                         .setTitle("Hướng dẫn")
                         .setMessage("Chọn nút chụp ảnh -> Chụp ảnh chứng minh thư. \n" +
                                 "Xem kết quả trả về ở dưới! \n " +
+                                "Đảm bảo góc chụp để ảnh được rõ nhất có thể! \n" +
                                 "Good luck!")
 
                         // Specifying a listener allows you to take an action before dismissing the dialog.
