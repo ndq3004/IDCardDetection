@@ -22,6 +22,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.util.Base64;
 import android.widget.TextView;
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
     Uri image;
     String mCamFileName;
     String resText;
+    EditText ipAddress;
     private Context mContext = MainActivity.this;
     private static final int REQUEST = 112;
     File sendFile;
@@ -94,9 +96,12 @@ public class MainActivity extends AppCompatActivity {
         btnCap = (Button) findViewById(R.id.button1);
         btnGet = (Button) findViewById(R.id.button2);
         info = (TextView) findViewById(R.id.textView);
+        ipAddress = (EditText) findViewById(R.id.ipAddress);
         titleResult = (TextView) findViewById(R.id.titleResult);
 
+        String ipTyping = ipAddress.getText().toString();
         callHTTPRequest = new CallHTTPRequest(mContext);
+        callHTTPRequest.setIpAddress(ipTyping);
         try {
             ResponseHandler.test();
         }catch (Exception e){
@@ -168,22 +173,26 @@ public class MainActivity extends AppCompatActivity {
                     imgCap.setVisibility(View.VISIBLE);
                 }
             }
-        }
-        File file = new File(mCamFileName);
-        if(!file.exists()){
-            file.mkdir();
-        }else{
-            Response response = callHTTPRequest.getIDCardInfo();
-            Log.i("reponse get", "respnse");
-            titleResult.setText("Kết quả trích xuất: ");
-            if(response.isSuccessful()){
-                info.setBackgroundResource(R.drawable.border);
-                ResponseHandler.handleResponse(response, info);
-            }else {
-                info.setText("Error occur!");
+            File file = new File(mCamFileName);
+            if(!file.exists()){
+                file.mkdir();
+            }else{
+                String ipTyping = ipAddress.getText().toString();
+                callHTTPRequest.setIpAddress(ipTyping);
+                Response response = callHTTPRequest.getIDCardInfo();
+                Log.i("reponse get", "respnse");
+                titleResult.setText("Kết quả trích xuất: ");
+                if(response != null && response.isSuccessful()){
+                    Log.i("reponse get", "respnse success");
+                    info.setBackgroundResource(R.drawable.border);
+                    ResponseHandler.handleResponse(response, info);
+                }else {
+                    info.setText("Error occur!");
+                }
             }
+            super.onActivityResult(requestCode, resultCode, data);
         }
-        super.onActivityResult(requestCode, resultCode, data);
+
     }
 
 

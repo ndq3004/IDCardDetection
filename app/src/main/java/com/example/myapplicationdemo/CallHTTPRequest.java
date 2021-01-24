@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -49,11 +50,27 @@ public class CallHTTPRequest {
         this.context = context;
         this.imutils = new Imutils();
         this.client = new OkHttpClient.Builder()
-                .connectTimeout(100, TimeUnit.SECONDS)
-                .writeTimeout(100, TimeUnit.SECONDS)
-                .readTimeout(100, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(50, TimeUnit.SECONDS)
+                .readTimeout(50, TimeUnit.SECONDS)
                 .build();
         Log.i("IP address", getIPAddress(true));
+    }
+    public void setIpAddress(String ipAdd){
+        try {
+            String[] numberInIP = ipAdd.split("\\.");
+            for (String s : numberInIP) {
+                int valid = Integer.parseInt(s);
+            }
+            if(!ipAdd.isEmpty() && numberInIP.length == 4){
+                this.localIp = ipAdd;
+                Log.i("valid ip", "valid ip");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
     }
     public Intent getCaptureImageIntent(){
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -91,9 +108,9 @@ public class CallHTTPRequest {
             String base64ImageCard = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
             if(!base64ImageCard.isEmpty()){
                 base64ImageCard = base64ImageCard.replace("\n", "");
-                Log.i("SuccessPOST", base64ImageCard);
                 String dataStringJson = "{\"image\":\"" + base64ImageCard +"\"}";
                 RequestBody body = RequestBody.create(dataStringJson, JSON);
+                Log.i("localIp", localIp);
                 try {
                     Request request = new Request.Builder()
                             .url("http://" + localIp + ":5000/postimg")
@@ -104,7 +121,7 @@ public class CallHTTPRequest {
                     Response response = client.newCall(request).execute();
                     return response;
                 }catch (Exception e){
-                    e.printStackTrace();
+//                    e.printStackTrace();
                 }
             }
         }

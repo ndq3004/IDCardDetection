@@ -8,12 +8,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import okhttp3.Response;
 
 public class ResponseHandler {
     public static void handleResponse(Response response, TextView textView){
+        Map<String, String> fieldName = new HashMap<String, String>();
+        fieldName.put("id", "Số");
+        fieldName.put("name", "Họ tên");
+        fieldName.put("birth", "Ngày sinh");
+        fieldName.put("country", "Quê quán");
+        fieldName.put("home", "Nơi ĐKHK thường trú");
+
         try {
             String res = response.body().string();
             res = res.replace("\\", "");
@@ -31,7 +40,7 @@ public class ResponseHandler {
                 Iterator<String> iter = reader.keys();
                 while (iter.hasNext()){
                     String key = iter.next();
-                    result += String.format("%s: %s \n", key, reader.getString(key));
+                    result += String.format("%s: %s \n", fieldName.get(key), reader.getString(key));
                 }
                 textView.setText(result);
             }
